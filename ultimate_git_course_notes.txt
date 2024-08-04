@@ -1,0 +1,507 @@
+-as a best practice, always review what we have in the staging area before making a commit
+
+
+
+-use the diff command to see the lines of code that has been staged
+
+
+
+-use the show command to see what we have changed in a given commit, it will only show the changes not the actual file. With the show we can easily view an object inside GITs DB
+
+
+
+-each commit in git contains a complete snapshot of our working directory, not just changes
+
+
+
+-log files serve as a record of the programs operations
+
+
+
+-a git repo is somewhat like a database that holds snapshots of your project's entire file system at different points in time through commits
+
+
+
+-a tree is a data structure for representing hierarchical information. In a tree we can have nodes and these nodes can have children
+
+
+
+-use git ls-tree <commit_id> to see all the files and directories stored in a commit. Files are represented using blobs and directories using trees
+
+
+
+-git objects: commits, blobs, trees, tags - use the git show command with these object ids to view them in the git DB
+
+
+
+-we can use the git restore —staged command to remove files from our staging area and revert them to their state in the last commit. 
+
+
+
+-we can discard local changes using the git restore and git clean command	
+
+
+
+-once git tracks a file it stores every version of that file in its db - so we can always go back and restore a file or dir to a previous version
+
+
+
+-the staging area is a holding space for changes we want to include in the next commit
+
+
+
+-if you run a git status -s and it is clear that means there are no changes detected in the working dir compared to the staging area
+
+
+
+-git status will give us a status of the working dir and the staging area
+
+
+
+-head pointer points to the current branch we are working on and each branch has its own pointer (branch pointer) which is the branch name and indicates the name of the current branch and points to the latest commit on that branch
+
+
+
+-when we are in a detached head state, the head is not attached to a branch anymore, its pointing to a specific commit, in this situation we should not create new commits, only view our code
+
+
+
+-use git reflog to show all commits including orphaned ones
+
+
+
+-when you are in a detached head state it means you are no longer working on any specific branch. In a detached head state any commits made will be orphaned as soon as you navigate back to an established branch. Orphaned commits are up for garbage collection by git, by making sure we are on branch we can avoid orphaned commits
+
+
+
+-to view the history of a file we still use the log command but append the filename at the end
+
+
+
+-to find all the commits that have touched a certain file we can run git log —oneline <filename>
+
+
+
+-we use tags to bookmark certain commits ie: a commit that represents a given version
+
+
+
+-with annotated tags we can associate a message with a tag
+
+
+
+-unstable software often refers to software that is prone to crashes, errors or unpredictable behaviour often due to the presence of bugs
+
+
+
+-a branch in git is just a pointer to a commit, when we create a new branch, git creates a pointer that can be moved around. A git branch is just a pointer with a 40 byte commit id that is stored in file
+
+
+
+-git knows the current branch we are currently working on via the HEAD pointer. HEAD is just a tiny file that contains the name of a branch
+
+
+
+-branches are like an isolated workspace
+
+
+
+-stashing in git means storing it in a safe place
+
+
+
+-by default new untracked files are not included in your stash, to include them we have to use the all option
+
+
+
+-merging is all about bringing in changes from one branch to another
+
+
+
+-in git we have two types of mergers: fast forward merges and 3 way merges
+
+
+
+-fast forward merge can be done when the branches do not diverge, ie: there is a linear path from our feature branch to master
+
+
+
+-a 3 way merge needs to be done when two branches are diverged, ie: there are changes in one branch (lets say master) that don’t exist in the other branch lets say (feature) - its called three way merge because git looks at three commits to create a seperate commit that is used solely for merging this is called a merge commit. The three commits that are used are the common ancestor for both branches (the before code) and the tips of the branches (after code) the changes of these three commits are combined and used to create the merge commit.
+
+
+
+-we can use the diff command to see the differences between two commits
+
+
+
+-each commit in git points to its previous commit, this is how git can maintain history
+
+
+
+-we should not Crete new commit in the detached head state
+
+
+
+-we can use tags to bookmark commits in our history ie: v1.0
+
+
+
+-with annotated tags we can associate a message with a tag
+
+
+
+Upto what are branches
+
+
+
+
+
+-git uses the HEAD pointer to identify what branch we are on and it is a reference to the current commit in the working directory
+
+-branch pointers like MASTER and FEATURE point to the latest commit in that branch	
+
+
+
+-branches like MASTER and FEATURE are just pointers to a commit and HEAD is just a pointer to the currently activate branch or commit.
+
+
+
+-stashing in git means storing in a safe place
+
+
+
+-stashes like commits will clean your working dir
+
+
+
+-merge commits (no fast forward option)make it easier to undo a feature, we just revert the merge commit and that will revert all the changes that came in from the feature branch, essentially the entire branch will be reverted. In this case we have a single commit we have to revert, but if we use a fast forward merge, we may need to revert multiple commits
+
+
+
+-as a best practice, when we are done working on a branch we should delete it so as to no create confusion.
+
+
+
+-ideally we should not add new code as part of resolving merge conflicts as that code was not introduced as part of either branches. The resulting merge commit is referred to as an evil commit as its introducing changes that didn’t exist in any of these branches
+
+
+
+-merge conflicts cannot occur in ff merges only 3-way merges.
+
+
+
+-when branches diverge, it means commits that are in one branch are not the other and vice/versa
+
+
+
+Up2 undoing a faulty merge
+
+
+
+-rewriting history is fine if the repo is on the local machine and just you working on it, but if its on remote repo and you shared with others its not a good idea to rewrite history as your history and theirs will be different. If we have shared our history instead of undoing (git reset) we should revert (git revert) our commit, which will create a new commit with the opposite changes of the target commit and keep the history consistent.
+
+
+
+-we we revert a commit, a new commit is created which cancels all the changes in the target commit
+
+
+
+-The HEAD pointer can either point to a branch or commit. A branch to signify which branch we are currently on or a commit if its in a detached head state
+
+
+
+-A merge commit has two parents, one on the master and one of feature branch. The first parent is the one on the same branch as the merge commit, ie: if the merge commit is on the master branch then the parent on the master branch is the first parent. When we revert a merge commit we need to tell git which parent to revert to.
+
+
+
+-a squash merge consolidates all the commits in a feature branch and put them in a single commit to be merged into the master branch, this is useful for keeping the commit history conscience and clean. A squash commit is not a merge commit because it does not have two parents. We should use this only with small, short lived branch with bad history
+
+
+
+-be sure to remove the feature branch after squash merge, because it doesn’t commit a merge commit and won’t be in list of merged branches it can create confusion if you keep the branch around after finishing with it.
+
+
+
+-squash merges can produce conflicts like 3-way merges and unlike ff merges - the process to resolve is the same.
+
+
+
+-rebasing rewrites history
+
+
+
+-rebasing is a technique to bring changes from one branch into another and create linear history. It changes the base of a feature branch to another commit. This technique is fine if we are only working on a local repo, but if we have shared our repo with others we should not use rebasing as it rewrites history and can create a big mess. So we should only use rebasing for branches or commits that are local in your repo. If we have shared the commits with others, or pushed our changes, we should not use rebasing
+
+
+
+-we should use rebasing for branches or commits that are local in our repo, if we have shared these commits or pushed our changes, we should not use rebasing as your history and those of others will be different
+
+
+
+-if we have a commit that does not have any branches or other commits pointing to it, git will eventually remove it as part of its garbage collection because it is an orphaned	commit.
+
+
+
+-commits in git are immutable, meaning they cannot be changed
+
+
+
+-rewriting the history of a repo that has already been pushed to a remote can cause issues.
+
+
+
+-git rebase, git commit —amend, git reset are all commands that rewrites history and you need to be careful with them if they have already been pushed to a remote, because people can add commits on top of the old history but locally now you have a new history which is different to theirs, so you are creating commits to a new history and they are creating commits to an old history 	
+
+
+
+-rebasing can cause conflicts
+
+
+
+-git clean -fd will remove untracked files from our repo
+
+
+
+
+
+-cherry picking in git is a way to apply the changes from a specific commit from one branch onto another branch without merging the entire branch.
+
+
+
+-the difference between fork and clone is fork copies a remote repo in the cloud but clone will copy a remote repo to your local machine
+
+
+
+-for open source projects: contributors don’t have write access (push) to the main repo, so they need to fork the repo, then push commits to the fork and open a pull a request. The maintainers who have the push access will get the pull request and decide if they want to merge the changes and push them to the main repo. This is called the integration manager workflow, because someone is in change of integrating changes
+
+
+
+-git push will only push the current branch use the —all option to push all branches in the repo
+
+
+
+-when we clone a repo, git names the source repo “origin” so if we clone a repo on GitHub the reference to the remote repo is shown with the “origin” pointer
+
+
+
+
+
+-branches that include “origin” are called remote tracking branch and just show the HEAD and branch pointers of the remote repo. Note these are not like normal branches that we can checkout and commit to.
+
+
+
+-the fetch command allows us to get the most upto date version of our remote repo (commits there we don’t have locally). Note when we do a git fetch our working dir is not affected with the changes in the remote, to bring in the changes we merge our remote tracking branch into master. 
+
+
+
+-So to bring in changes from a remote repo into our local repo we need to do a fetch followed by a merge, the pull command combines the two
+
+
+
+-The purpose of the rebase command in git is to get a clean linear history
+
+
+
+-by default the push command does not transfer our tags to a remote repo. To do so type git push origin <tagname>
+
+
+
+-when you create a tag it is added to the latest commit
+
+
+
+-binary files are the compiled version of our app ie: machine code that a CPU can execute
+
+
+
+-pre-release is code that is not production ready or not stable
+
+
+
+-when we do a fetch git will download the remote tracking branches from the remote repo but it won’t create those branches manually locally. So we have to git switch -C <branch-name> <remote-tracking-branch> to create and map to that branch locally.
+
+
+
+-to remove a branch in a remote repo type: git push -d origin feature/change-password
+
+
+
+-git branch -r will list the remote tracking branches
+
+
+
+-to remove the tracking branches that are not on the remote on our machine we type git remote prune origin
+
+
+
+-pull requests is a request to pull in changes from a branch into master. It contains a discussion / code review component where proposed changes can be reviewed and improvements suggested before the merge.
+
+
+
+
+
+-target branch is the branch we want to merge the changes from and the source branch is the branch we want to merge the changes into ie: feature is target and main is source
+
+
+
+-for a pull request that has conflicts, the person in charge of merging, has to pull in the latest code, then they have to start the merge process, resolve any conflicts, add a new commit and push to GitHub
+
+
+
+-we use milestones in GitHub to track the progress of various issues
+
+
+
+-when you fork a repo on GitHub, it will take a full copy of that repo and put it in your account
+
+
+
+-remember the first time we push a branch to a remote repo we have to use the -u option to set the upstream branch. We need to do this when we create a branch in our local repo but there is no remote tracking branch in our remote repo that maps to this local branch.
+
+
+
+-to keep a forked repo unto date we can fetch / pull the recent changes from the original repo into our local repo and then push our local repo to our forked repo
+
+
+
+-we should not use a force push that often unless we have screwed something up
+
+
+
+-with interactive rebasing we can rewrite history ie: we can modify, drop, split, combine commits
+
+
+
+-we need our git history to see what was changed, why and when
+
+
+
+-the golden rule of rewriting history: don’t rewrite public history
+
+
+
+-once we share our work on a public repo, its public, its final. So we should not change it unless we have a strong reason for doing so
+
+
+
+-rewriting private history in your local repo is perfectly fine, in fact its considered good practice. Ie: we should always clean up our work / private history before sharing it with the rest of the world
+
+
+
+-commits in git are immutable, once we commit them they cannot be changed
+
+
+
+-divergent branches in git mean there are commits in one branch that are not present in the other or vice versa. Ie: we try to push our local changes to origin after someone else has pushed to origin. In this case we have to merge origin/master into our local master, then we can do a push
+
+
+
+-difference between git reset soft, mixed and hard: soft will remove the commit only and not touch the working dir and staging area. Mixed will go back another step and unstage the changes in the staging area and hard will go another additional step back and reset both the working dir and staging area to the state it was at the target commit
+
+-difference between git fetch and git pull is fetch will get the updates from the remote repo and update your remote tracking branch but will not integrate the changes into your working dir, git pull will do both a fetch and a merge so the changes in the remote repo will be integrated into your local repo
+
+
+
+-difference between git reset soft, mixed and hard: soft will remove the commit only and not touch the working dir and staging area. Mixed will go back another step and unstage the changes in the staging area and hard will go another additional step back and reset both the working dir and staging area to the state it was at the target commit
+
+
+
+-so if we are working on a public repo and sharing our work with others we should not use the git reset command because it rewrites history and it will mess with future commits of both myself and the team. But if we have made a commit locally and not shared that commit then we can do a reset on our local repo to before the bad commit and then push to the remote repo and that should have no issues because the bad commit was not shared - git revert is the safe option to use to undo commits in public repos
+
+
+
+-To reverting a range of commits type git revert —no-commit HEAD..HEAD~3 (the head part type your actual range) - this command will revert the range 
+
+
+
+-in git we never lose our commits, project history or objects as data is immutable in git. It will keep these objects for a while and if they are not used then they will be garbage collected. We can use the git reflog command to see ‘lost’ commits
+
+
+
+-when we amend commits, on the surface it looks like the commit was amended but under the hood git actually created a new commit, because commits in git are immutable
+
+
+
+-with rebasing we can replay a bunch of commits on top of another commit
+
+
+
+-when we edit a commit, git actually creates a new commit. If we do this as part of an interactive rebase operation then a change that will be introduced in an earlier commit will be carried on throughout the rest of the history 
+
+
+
+-we should start the rebase operation on the parent of the target commit (commit before the target)
+
+
+
+-we can drop commits through a git reset or git rebase. Reset if we want to move the head and branch pointer down to eliminate the commits after it or rebase if we want to drop a commit in the middle of other commits, note that for the rebase we will have to resolve conflicts from the removed commit as the future commits will have changes that rely on the dropped commit
+
+
+
+-rebasing is a destructive operation that rewrites history, so we should only use it for the commits that we haven’t shared with others
+
+
+
+-git rebase interactive iteratively replays our commits allowing us to apply operations on each commit
+
+
+
+-git rebase -i (interactive rebase) allows you to iteratively replay and apply operations on a series of commits.
+
+
+
+-a carrot will represent a commits parent ie: ^
+
+
+
+-when we modify a commit via interactive rebase ie: reword it, it will cause the commit to be recreated ie: a will turn into a* and all its subsequent commits will also be recreated
+
+
+
+-squashing commits means combining commits
+
+
+
+-fixup operation is similar to squash but it won’t give you the previous commit messages to craft. It will give you the commit message of the commit that the others are being combined into
+
+
+
+-git reflog will show the history of the HEAD pointer
+
+
+-first step is to initiate a repo by running git init
+
+-commiting files to repo is a two step process, first add to staging area with git add . or filename or patterns, then after adding to staging area then do the commit.
+
+-git rm filename to delete files
+-git mv filename to move or rename files or directories
+
+-git status -s for short status. left column for staging area (green M means changes in the staging area) and right column for working directory (red M means additional changes in the working directory that are not added to staging)
+M means modifed and A means added
+
+-use git diff command without any arguments to see unstaged changes to the lines of code in the file, if we pass --staged to this command as an arg we can see the staged changes that are going to go in the next commit
+
+-use git blame to find the author of a particualr line
+
+-use git switch bugfix to switch branches
+
+-use the diff tool or command to see the changes in files
+
+-git has two types of mergers: fast forward (if branches have no diverged)and 3 way merge (if branches have )
+
+-git pull downloads and merges the changes
+
+-by default the push command doesn;t transfer our tags to a remote repo
+
+-The golden rule of rewriting history is: Dont rewrite public history (once you push your work its public, its final). Rewriting the privite history in your local repo is fine
+
+-use git reflog to see how pointers have moved in our history 
+
+-three different options for reseting the HEAD. Soft, mixed and hard
+
+-rebasing is a destructive operation that rewrites history, so you should only use it for the commits that you havn't shared with others
+
+-use git remote prune origin to remove the remote tracking branches
+
+
+
